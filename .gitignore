@@ -1,0 +1,27 @@
+# Python bytecode / cache
+__pycache__/
+*.py[cod]
+
+# Python packaging artifacts
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Test / coverage caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Compiled binaries
+*.exe
+*.o
+*.obj
+
+# OS junk
+.DS_Store
+Thumbs.db

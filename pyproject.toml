@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "genshin-wish-probability"
+version = "0.5.0"
+description = "Exact probability engines for Genshin Impact Character and Weapon Event Wishes"
+requires-python = ">=3.10"
+
+[project.scripts]
+genshin-wish = "genshin_wish.cli:main"
+genshin-wish-plots = "genshin_wish.plotting:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

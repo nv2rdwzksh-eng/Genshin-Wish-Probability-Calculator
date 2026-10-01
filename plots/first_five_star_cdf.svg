@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="500.0" y="30" text-anchor="middle" font-family="sans-serif" font-size="21" font-weight="600">First 5-star waiting-time CDF</text>
+<rect x="813.80" y="55" width="158.20" height="427" fill="#f3b61f" opacity="0.16"/>
+<line x1="92" y1="482.00" x2="972" y2="482.00" stroke="#d9dee7" stroke-width="1"/>
+<text x="80" y="486.00" text-anchor="end" font-family="sans-serif" font-size="12" fill="#344054">0%</text>
+<line x1="92" y1="396.60" x2="972" y2="396.60" stroke="#d9dee7" stroke-width="1"/>
+<text x="80" y="400.60" text-anchor="end" font-family="sans-serif" font-size="12" fill="#344054">20%</text>
+<line x1="92" y1="311.20" x2="972" y2="311.20" stroke="#d9dee7" stroke-width="1"/>
+<text x="80" y="315.20" text-anchor="end" font-family="sans-serif" font-size="12" fill="#344054">40%</text>
+<line x1="92" y1="225.80" x2="972" y2="225.80" stroke="#d9dee7" stroke-width="1"/>
+<text x="80" y="229.80" text-anchor="end" font-family="sans-serif" font-size="12" fill="#344054">60%</text>
+<line x1="92" y1="140.40" x2="972" y2="140.40" stroke="#d9dee7" stroke-width="1"/>
+<text x="80" y="144.40" text-anchor="end" font-family="sans-serif" font-size="12" fill="#344054">80%</text>
+<line x1="92" y1="55.00" x2="972" y2="55.00" stroke="#d9dee7" stroke-width="1"/>
+<text x="80" y="59.00" text-anchor="end" font-family="sans-serif" font-size="12" fill="#344054">100%</text>
+<line x1="92.00" y1="482" x2="92.00" y2="488" stroke="#344054"/>
+<text x="92.00" y="506" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#344054">1</text>
+<line x1="279.87" y1="482" x2="279.87" y2="488" stroke="#344054"/>
+<text x="279.87" y="506" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#344054">20</text>
+<line x1="477.62" y1="482" x2="477.62" y2="488" stroke="#344054"/>
+<text x="477.62" y="506" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#344054">40</text>
+<line x1="675.37" y1="482" x2="675.37" y2="488" stroke="#344054"/>
+<text x="675.37" y="506" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#344054">60</text>
+<line x1="813.80" y1="482" x2="813.80" y2="488" stroke="#344054"/>
+<text x="813.80" y="506" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#344054">74</text>
+<line x1="873.12" y1="482" x2="873.12" y2="488" stroke="#344054"/>
+<text x="873.12" y="506" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#344054">80</text>
+<line x1="972.00" y1="482" x2="972.00" y2="488" stroke="#344054"/>
+<text x="972.00" y="506" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#344054">90</text>
+<line x1="92" y1="482" x2="972" y2="482" stroke="#344054" stroke-width="1.5"/>
+<line x1="92" y1="55" x2="92" y2="482" stroke="#344054" stroke-width="1.5"/>
+<line x1="972.00" y1="55" x2="972.00" y2="482" stroke="#b42318" stroke-width="1.5" stroke-dasharray="6 5"/>
+<polyline points="92.00,479.44 101.89,476.89 111.78,474.36 121.66,471.84 131.55,469.34 141.44,466.86 151.33,464.39 161.21,461.93 171.10,459.49 180.99,457.06 190.88,454.65 200.76,452.25 210.65,449.87 220.54,447.50 230.43,445.14 240.31,442.80 250.20,440.48 260.09,438.16 269.98,435.86 279.87,433.58 289.75,431.31 299.64,429.05 309.53,426.80 319.42,424.57 329.30,422.36 339.19,420.15 349.08,417.96 358.97,415.78 368.85,413.62 378.74,411.47 388.63,409.33 398.52,407.20 408.40,405.09 418.29,402.99 428.18,400.90 438.07,398.83 447.96,396.76 457.84,394.71 467.73,392.67 477.62,390.65 487.51,388.63 497.39,386.63 507.28,384.64 517.17,382.66 527.06,380.70 536.94,378.74 546.83,376.80 556.72,374.87 566.61,372.95 576.49,371.04 586.38,369.15 596.27,367.26 606.16,365.39 616.04,363.53 625.93,361.68 635.82,359.84 645.71,358.01 655.60,356.19 665.48,354.38 675.37,352.58 685.26,350.80 695.15,349.02 705.03,347.26 714.92,345.51 724.81,343.76 734.70,342.03 744.58,340.31 754.47,338.60 764.36,336.90 774.25,335.20 784.13,333.52 794.02,331.85 803.91,330.19 813.80,328.54 823.69,326.90 833.57,325.27 843.46,323.65 853.35,322.03 863.24,320.43 873.12,318.84 883.01,317.26 892.90,315.68 902.79,314.12 912.67,312.56 922.56,311.02 932.45,309.48 942.34,307.96 952.22,306.44 962.11,304.93 972.00,55.00" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+<polyline points="92.00,479.44 101.89,476.89 111.78,474.36 121.66,471.84 131.55,469.34 141.44,466.86 151.33,464.39 161.21,461.93 171.10,459.49 180.99,457.06 190.88,454.65 200.76,452.25 210.65,449.87 220.54,447.50 230.43,445.14 240.31,442.80 250.20,440.48 260.09,438.16 269.98,435.86 279.87,433.58 289.75,431.31 299.64,429.05 309.53,426.80 319.42,424.57 329.30,422.36 339.19,420.15 349.08,417.96 358.97,415.78 368.85,413.62 378.74,411.47 388.63,409.33 398.52,407.20 408.40,405.09 418.29,402.99 428.18,400.90 438.07,398.83 447.96,396.76 457.84,394.71 467.73,392.67 477.62,390.65 487.51,388.63 497.39,386.63 507.28,384.64 517.17,382.66 527.06,380.70 536.94,378.74 546.83,376.80 556.72,374.87 566.61,372.95 576.49,371.04 586.38,369.15 596.27,367.26 606.16,365.39 616.04,363.53 625.93,361.68 635.82,359.84 645.71,358.01 655.60,356.19 665.48,354.38 675.37,352.58 685.26,350.80 695.15,349.02 705.03,347.26 714.92,345.51 724.81,343.76 734.70,342.03 744.58,340.31 754.47,338.60 764.36,336.90 774.25,335.20 784.13,333.52 794.02,331.85 803.91,330.19 813.80,312.03 823.69,279.64 833.57,237.86 843.46,192.88 853.35,150.69 863.24,115.66 873.12,89.82 883.01,72.90 892.90,63.13 902.79,58.20 912.67,56.07 922.56,55.29 932.45,55.06 942.34,55.01 952.22,55.00 962.11,55.00 972.00,55.00" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="532.0" y="540" text-anchor="middle" font-family="sans-serif" font-size="14">Wish since previous 5-star</text>
+<text x="22" y="268.5" text-anchor="middle" font-family="sans-serif" font-size="14" transform="rotate(-90 22 268.5)">P(X &lt;= n)</text>
+<rect x="106" y="67" width="310" height="75" rx="6" fill="#ffffff" stroke="#d0d5dd" opacity="0.94"/>
+<line x1="120" y1="88" x2="154" y2="88" stroke="#2563eb" stroke-width="3"/><text x="164" y="93" font-family="sans-serif" font-size="13">Official-only flat baseline</text>
+<line x1="120" y1="114" x2="154" y2="114" stroke="#d97706" stroke-width="3"/><text x="164" y="119" font-family="sans-serif" font-size="13">Community soft-pity assumption</text>
+<text x="892.90" y="468" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#8a5200">assumed soft-pity region</text>
+</svg>
