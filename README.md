@@ -1,4 +1,208 @@
-# Genshin Wish Probability Calculator — v0.5
+# Genshin Wish Probability Calculator — v1.0.2
+
+Version 1.0.2 fixes result visibility, request feedback, and version drift.
+After a successful calculation or a history selection, the app waits for the
+layout animation to finish before checking the result card. If its heading and
+leading content are outside a comfortable viewport area, it scrolls them into
+view. Focus moves to the result heading only when scrolling is needed and focus
+has stayed on the initiating action (or the document body). An already-visible
+result keeps the user's scroll position and focus. On short screens the leading
+section is the target rather than requiring the whole tall card to fit.
+Reduced-motion and animation-off preferences use an immediate reveal.
+
+While a request runs, a visible loading panel and placeholder replace old
+numbers. Cancel buttons are available beneath Calculate and in the result
+feedback. A **30-second timeout** aborts the browser request and restores the
+controls. Failures, cancellation, and timeouts are shown prominently in the
+result card, with a retry action; network/validation/server failures also remain
+reported beside the form. If a last successful result exists, it is restored
+with an explicit previous-result label. Unsuccessful attempts are never saved
+to history, and late responses from cancelled/timed-out attempts cannot replace
+a newer calculation. Retry submits the current form inputs.
+
+Cancellation stops waiting in the browser; an already-running synchronous
+backend calculation may still finish on the server. No probability-engine
+cancellation or numerical behavior was changed.
+
+All displayed app versions now come from the FastAPI `VERSION`: the top bar,
+localized footer, About panel, and text-export header share the backend value.
+The UI loads it from `GET /api/version`; a fresh calculation's backend-supplied
+version also refreshes it. If no backend version is available, the UI/export
+says “unavailable” rather than using a hard-coded or saved-history version.
+Historical record versions remain in the raw export data as provenance and do
+not replace the live app version.
+
+Version 1.0.1 refines the web interface: a centered, wider wish-plan card opens
+the page, then moves left when results are available. The three result cards
+enter on the right (or stack beneath the plan on mobile). Mode selection and
+the confidence axis now use smooth sliding indicators. All input surfaces and
+result panels share the same subtle gradient texture.
+
+Settings now opens as a frosted-glass, Windows-style window with a left sidebar:
+**Calculator Settings**, **Appearance**, **Language Preferences**, and **Help
+Center**. The lower-left sidebar carries the Wish Lab icon and name. Each time
+you open Settings it starts on Calculator Settings. Keyboard arrows, Home, and
+End navigate categories; Escape closes the window. The close icon is centered,
+and standard number/select controls share a consistent 44 px height.
+
+Font size is selectable in **1 px increments from 10 to 20 px**, with **14 px**
+as the new default. Existing saved Small/Default/Large preferences migrate to
+their previous 14/16/18 px equivalents. About Calculator and the version number
+appear together in Help Center, followed by Terms & Policies and then the
+author contact link, each on a separate row.
+
+Layout, mode, and confidence animations obey both the animation toggle and the
+system reduced-motion preference. Calculation behavior and model assumptions
+are unchanged.
+
+Version 1.0 adds a responsive, bilingual web planner built on the existing
+character, weapon, and combined probability engines. The original Python APIs
+and command-line planner remain available.
+
+## Run the web calculator
+
+From the repository root (Python 3.10 or later; 3.12 is tested):
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[web]"
+.\.venv\Scripts\python.exe -m uvicorn web.backend:app --host 127.0.0.1 --port 8000
+```
+
+Open **[http://127.0.0.1:8000](http://127.0.0.1:8000)**. FastAPI serves both the
+page and API, so a second development server is unnecessary. Open this address
+instead of double-clicking `web/index.html`. Stop the server with Ctrl+C.
+If the environment is already configured, only the final command is needed.
+
+### Web features
+
+- The main mode switch selects **Character**, **Weapon**, or **Character +
+  Weapon**. Combined mode always finishes characters first, then spends the
+  remaining wishes on the supplied weapon state.
+- The web UI always uses the existing **community soft-pity assumptions** and,
+  for characters, the configurable **community Capturing Radiance counter
+  model**, starting at C1. The expandable counter field allows C0–C3. The web UI
+  deliberately has no probability-model switches; the Python and CLI model
+  options remain available.
+- The result shows exact success probability, unconditional average wishes to
+  target, and average completion wishes conditional on success within budget.
+- Ranked outcomes show the top N most likely **stop-at-target** copy counts,
+  plus your requested outcome if it falls outside the top N. Its rank is always
+  displayed. Exact ties share a competition rank, with deterministic copy-count
+  ordering for display. The list is capped at each requested target, rather
+  than modeling continued pulls after success.
+- The 0–100% confidence axis snaps to 50/75/90/95/99%, with 0% and 100% endpoints.
+  Preset buttons and arrow/Home/End keyboard controls are supported. The number
+  shown is the **minimum total wish budget** for that probability, not the
+  expected wait. Exactly 100% uses the existing structural model bound.
+- The latest **five calculations** appear below Calculate. They load on opening
+  the page; selecting a record restores its inputs and exact result. The initial
+  screen stays centered without automatically opening the latest result.
+  Turning history off hides the history section entirely.
+- Bottom-left **Settings** includes history on/off and a `.txt` export, display
+  precision (0–10 decimal places, default 2), top outcomes (1–10, default 3),
+  system/dark/light themes, font sizes (10–20 px, default 14 px), animations,
+  English/Chinese, and help in separate sidebar pages.
+  Dark mode retains the original blue/violet design with clearer input outlines;
+  light mode uses a white/silver gradient. System theme and reduced-motion
+  preferences are respected.
+- The Help Center contains the model explanation, current version, Terms and
+  Policies, and the author's
+  [GitHub issue page](https://github.com/nv2rdwzksh-eng/Genshin-Wish-Probability-Calculator/issues).
+
+Settings and history are stored in this browser's `localStorage`, without a
+server-side history database or analytics. Turning history off removes the
+saved records and prevents new ones being stored; the current result remains
+visible for the session. Clear removes history without disabling it. Export is
+available when history is on and contains records: it includes all saved inputs,
+unrounded probabilities, ranks, thresholds, and model assumptions. Blocked or
+unavailable browser storage falls back to session-only state. The calculator
+backend receives form inputs; local server logs may record request metadata.
+
+Precision changes only formatting. Tiny nonzero probabilities are shown with
+`<`/near-certain probabilities with `>` when rounding would otherwise imply
+0% or 100%. The calculations retain their original floating-point precision.
+Inputs changing after a calculation mark the displayed result as stale.
+
+Interactive web limits are **0–2,000 wishes** and **0–10 target copies per
+banner**; underlying engine APIs retain their general limits and configurability.
+A zero-copy target is already met. Targets count new copies for this plan.
+These limits bound local server work; they are not claims about game mechanics.
+
+### Web architecture and outcome semantics
+
+`web/index.html`, `web/style.css`, and `web/script.js` implement the interface
+without a frontend build step or third-party CDN. `web/backend.py` validates
+requests and calls the existing public target-aware planning APIs. The engine
+and model files are unchanged.
+
+For combined copy outcomes, unfinished character trajectories have zero weapon
+copies. For trajectories completing the character target at time t:
+
+```text
+P(C=K, W>=j) = sum_t P(TC=t) * P(TW(j)<=N-t)
+P(C=K, W=j)  = P(C=K, W>=j) - P(C=K, W>=j+1)
+```
+
+Each additional weapon-target CDF is calculated once over all remaining
+budgets, and adjacent tails give the exact endpoint count probabilities.
+This supplies ranked joint outcomes without a giant joint-state DP or a
+separate weapon calculation per possible character completion time.
+
+For the 240-wish combined example (character pity 37, no guarantee, C1, target
+2; fresh weapon state, target 1), the web result is **45.74509331%**. Its
+90/95/99% budgets are **332/353/403**. The corresponding character-only result
+is **91.04958393%**. A fresh weapon target of one copy in 120 wishes gives
+**70.66535051%**. All values retain the existing probability assumptions.
+
+**Results are exact under the selected community modeling assumptions**, not a
+promise of the live game's outcome. The hidden CR counter, its C2 trigger
+chance, and per-wish soft-pity curves are not officially published formulas.
+No new Genshin mechanics or engine regression values are introduced in v1.0.1.
+
+### Web verification
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e ".[web,web-test]"
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+The optional web tests use FastAPI's test client and check all modes, validation,
+static serving, historical probability regressions, exact ranks, probability
+mass, and tiny sequential-reference agreement for joint outcomes. They are
+skipped if the web/test extras are absent, so engine-only installations still
+run the original suite.
+
+For the separate real-browser smoke test, leave the server running and install
+Node Playwright locally:
+
+```powershell
+npm install --no-save --package-lock=false playwright
+npx playwright install chromium
+node tests/web_smoke.cjs
+```
+
+This checks navigation, all three calculations, confidence keyboard controls,
+history restore/cap/off, text export, translations, appearance, mobile overflow,
+and error recovery. It also verifies the centered-to-results transition, settings
+sidebar navigation/default page, centered close icon, uniform control heights,
+numeric font sizes, old-history compatibility, and reduced-motion behavior.
+Screenshots are written under ignored `artifacts/web-v101/`.
+Optional environment variables `WISH_WEB_URL`, `PLAYWRIGHT_MODULE`, and
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE` select an existing test server or installation.
+
+The dedicated v1.0.2 browser regression check exercises actual desktop/mobile
+viewports (including 761/760 px), history selection, no-op reveals for already
+visible results, reduced motion, delayed responses, cancellation, timeout with
+a browser test clock, retries, HTTP/network/invalid-response failures, and API
+version propagation through both languages and exported files:
+
+```powershell
+node tests/web_reliability.cjs
+```
+
+Its screenshots are saved under ignored `artifacts/web-v102/`. It uses the same
+Playwright environment overrides as the smoke test.
 
 v0.5 adds exact sequential **character target -> weapon target** planning.
 The two existing target-aware engines provide first-completion distributions;
@@ -13,7 +217,7 @@ community counter assumption explicitly as described below.
 v0.4 adds an independent exact Weapon Event Wish planner to the existing
 Character Event Wish planner. Both report finite-budget probabilities,
 first-completion and remaining-budget distributions, expected completion
-times, and exact inverse thresholds. There is still no web or GUI frontend.
+times, and exact inverse thresholds. v1.0 now exposes these engines in the web UI.
 
 v0.3.2 makes the normal planner follow the user's stopping policy: once the
 requested number of copies is obtained, wishing on that goal stops. The older

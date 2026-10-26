@@ -4,9 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "genshin-wish-probability"
-version = "0.5.0"
+version = "1.0.2"
 description = "Exact probability engines for Genshin Impact Character and Weapon Event Wishes"
 requires-python = ">=3.10"
+
+[project.optional-dependencies]
+web = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1"]
+web-test = ["httpx>=0.28,<1"]
 
 [project.scripts]
 genshin-wish = "genshin_wish.cli:main"

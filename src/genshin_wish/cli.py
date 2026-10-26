@@ -638,7 +638,7 @@ def run_weapon_interactive(
 def run_banner_interactive(
     *, input_fn: InputFunction = input, output_fn: OutputFunction = print
 ) -> None:
-    output_fn("=== Genshin Wish Probability Calculator v0.5 ===")
+    output_fn("=== Genshin Wish Probability Calculator v1.0.2 ===")
     output_fn("1. Character Event Wish planning")
     output_fn("2. Weapon Event Wish planning")
     output_fn("3. Combined Character -> Weapon planning")

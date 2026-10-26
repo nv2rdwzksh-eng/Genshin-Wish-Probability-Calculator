@@ -1,5 +1,37 @@
 # Benchmark reports
 
+## v1.0 web adapter
+
+Measured 2026-10-25 on the development Windows host, Python 3.12.10 in the
+repository virtual environment. Median of three direct adapter calls, including
+all ranked outcomes and confidence thresholds; browser/network overhead is
+excluded.
+
+| Mode / state / budget | Median runtime | Success probability |
+|---|---:|---:|
+| Character pity 37/C1, target 2, budget 240 | 0.1489 s | 91.04958393% |
+| Fresh weapon, target 1, budget 120 | 0.0222 s | 70.66535051% |
+| Character pity 37/C1 target 2 -> fresh weapon target 1, budget 240 | 0.1714 s | 45.74509331% |
+| Character pity 37/C1 target 3 -> fresh weapon target 2, budget 500 | 0.3772 s | 83.65225172% |
+
+The adapter uses community curves and character Capturing Radiance by default.
+It reuses each phase's full hitting-time law for all confidence thresholds.
+Finite-budget copy distributions use the existing target-aware API. Combined
+count outcomes calculate each additional weapon-tail CDF once across all
+remaining budgets, then weight by the character hitting-time PMF; the weapon
+engine is not recomputed for every possible character completion time.
+Outcome mass in all four measured cases differed from 1 by less than 2e-15.
+
+Validation: the complete suite passed **126 tests** (117 existing plus 9 API
+tests). The real Chromium smoke test passed **61 checks** with zero JavaScript
+page errors, covering desktop and mobile layouts, all settings, storage fallback,
+ranked outcomes, exact confidence thresholds, export, and request-error recovery.
+
+The UI performs rounding, top-N selection, language/theme changes, history
+restoration, and confidence-slider updates locally. These interactions do not
+make additional calculation requests. No probability model or engine change
+was needed for v1.0.
+
 ## v0.5 combined character -> weapon planning
 
 Measured 2026-10-01 on the development Windows host with Python 3.12. Run

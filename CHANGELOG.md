@@ -1,5 +1,178 @@
 # Changelog
 
+## v1.0.2 — 2026-10-26
+
+### Result visibility
+
+- Successful calculations and restored history records now reveal the result
+  card when it is offscreen. Measurements wait for FLIP/staggered animations
+  and two layout frames so the scroll target uses the settled layout.
+- Comfortable, already-visible results preserve scroll and focus. When a reveal
+  is needed, focus moves to the result heading only if it is still with the
+  initiating action/body. A settings dialog is never focused through.
+- The helper supports desktop columns, mobile stacking, short viewports, reduced
+  motion, and animation-off settings. Superseded reveals are invalidated.
+- Disabled workspace scroll anchoring to avoid CTA/column height changes
+  competing with the controlled result reveal.
+
+### Loading, failures, and cancellation
+
+- Added a visible result loading panel, loading placeholders, and cancel controls
+  beside the CTA and in the result column. Previous numbers and associated
+  outcomes/thresholds are hidden during the new request.
+- Added prominent accessible result alerts for HTTP, validation, network, and
+  invalid-response failures, plus explicit cancellation/timeout feedback and a
+  retry action. The last successful result is retained with a previous-result
+  label; it is not presented as a successful result of the failed attempt.
+- Browser requests now have a 30-second timeout. Cancellation and timeout abort
+  the request and immediately release the CTA, without requiring a reload.
+- Request identity guards and cleared timers prevent late cancelled/timed-out
+  responses from overwriting newer results, saving history, or ending a newer
+  loading state. Only successful attempts enter history.
+- Retrying uses the current form. Browser cancellation does not claim to stop
+  work already running in a synchronous backend thread.
+- Added English and Chinese request-state labels and feedback.
+
+### Single-source UI version
+
+- FastAPI `VERSION` now supplies the top bar, footer, About panel, and text-export
+  header. Removed release literals from HTML, translations, and export logic.
+- Version fetch failures show a localized unavailable value. A fresh backend
+  calculation response can supply the version; restored history cannot change
+  it. Compatible schema-1 history no longer requires a release allowlist.
+- Updated API, package, and CLI release metadata to 1.0.2.
+
+### Verification
+
+- Added a dedicated real-browser regression script for viewport/focus behavior,
+  cancel/timeout/retry races, loading and retained-result labels, error recovery,
+  and dynamic API version propagation in UI/localization/export.
+- Added an API test patching backend `VERSION` to an unrelated value and checking
+  that HTML contains no release literal.
+- Verification: **127 Python tests**, the **88-check browser smoke suite**, and
+  **52 focused browser reliability checks** passed. Browser runs reported zero
+  JavaScript errors; desktop feedback and mobile result screenshots were reviewed.
+- Probability engines, model assumptions, and numerical regressions are unchanged.
+
+## v1.0.1 — 2026-10-26
+
+### Settings appearance
+
+- Replaced the scrolling settings list with a Windows-style, two-column
+  frosted-glass window. Its left sidebar contains Calculator Settings,
+  Appearance, Language Preferences, and Help Center, with Wish Lab branding
+  anchored at the lower-left.
+- Every opening resets to Calculator Settings. Categories support keyboard
+  navigation and expose tab/tabpanel semantics; Escape still closes the dialog.
+- Centered the close SVG on both axes and aligned standard number inputs and
+  selects to the same 44 px height.
+- Replaced named font presets with a dropdown for every integer size from
+  10 through 20 px; the default is now 14 px, with readable labels and hints.
+  Existing saved named preferences migrate to their previous pixel sizes.
+- Help Center now places About Calculator and version 1.0.1 on the same row,
+  followed by Terms & Policies, then the author contact hyperlink.
+
+### Main interface
+
+- The initial view contains only a centered 660 px wish-plan card and history
+  when enabled. No result placeholder is shown.
+- On the first successful calculation or explicit history selection, the
+  desktop plan card smoothly moves/narrows to the left while the three result
+  cards enter on the right. Mobile retains a single-column flow.
+- Saved history still loads on opening, but no longer automatically expands
+  the latest result. History from v1.0.0 remains selectable.
+- Added a sliding mode highlight; mode instructions now sit inside the lower
+  part of the selection box.
+- Added a smoothly animated confidence rail, fill, and thumb while retaining
+  exact confidence presets and keyboard behavior.
+- Extended the subtle gradient texture and accent edge to every result panel
+  and the standard input/select surfaces.
+- All new animation respects both the settings toggle and system reduced
+  motion. No probability calculations or model assumptions changed.
+
+### Version and verification
+
+- Updated web/API/package/CLI version labels to 1.0.1.
+- Extended the real-browser smoke check for the new layout, category keyboard
+  navigation, defaults, control geometry, font migration, compatible history,
+  reduced motion, and desktop/mobile layouts.
+- Verification: **126 Python tests passed**, and **88 Chromium checks passed**
+  with zero JavaScript page errors. Desktop and large-font Chinese mobile
+  screenshots were visually reviewed.
+- Existing numerical regression expectations are preserved.
+
+## v1.0 — 2026-10-25
+
+### Web planner
+
+- Expanded the author's four-file FastAPI/HTML/JavaScript/CSS foundation into a
+  responsive character, weapon, and combined planner. A prominent mode switch
+  controls the active banner fields. Combined mode follows character first,
+  then weapon with the remaining budget.
+- Community soft-pity schedules and character Capturing Radiance are enabled
+  by default. The web UI has no model switches; existing Python and CLI model
+  configuration remains available. Initial character CR counter is C1 and may
+  be adjusted in the expandable state control.
+- Added success probability, the stop-at-target outcome list, exact competition
+  ranks, and a guaranteed listing of the user's requested outcome in addition
+  to the top N most likely outcomes.
+- Added a 0–100% confidence axis with 50/75/90/95/99% snap points, preset buttons,
+  keyboard controls, and exact minimum-wish thresholds. The 100% endpoint uses
+  the modeled structural guarantee rather than a near-certainty approximation.
+- Reports distinguish unconditional expected completion wishes from conditional
+  completion wishes within the budget, and include the combined three-way
+  success/character-only/character-failure breakdown.
+
+### Settings, history, and appearance
+
+- Added a bottom-left Settings control with a keyboard-accessible dialog.
+- Calculator settings: history on/off (default on), unrounded calculation-data
+  export as UTF-8 .txt, 0–10 display decimal places (default 2), and top 1–10
+  outcomes (default 3) plus the user's target.
+- The latest five records load on opening the page. Selecting history restores
+  inputs and the saved result; Clear removes records. Turning history off
+  deletes saved history and prevents further persistence. Settings and history
+  stay in localStorage; unavailable storage falls back to session state.
+- Added system-theme following by default, the original blue/violet dark-tech
+  palette with clearer form outlines, a white/silver light gradient, font sizes,
+  and an animation toggle respecting system reduced-motion preferences.
+- Added English (default) and Simplified Chinese translations, plus About,
+  current version, the author's GitHub issue link, and Terms and Policies.
+- Added loading, validation, stale-result, and network-error states; preserved
+  the last valid result after request failure. Large-font/mobile and high
+  precision layouts are supported.
+
+### Backend and compatibility
+
+- The same FastAPI server serves the page, assets, version endpoint, and
+  /api/calculate; the frontend no longer hard-codes a separate API origin.
+- The API uses the existing public target-aware and combined-planning APIs.
+  Exact combined count probabilities come from character hitting-time mass
+  weighted against weapon CDF tails, followed by adjacent-tail differences.
+  No giant joint-state DP or Monte Carlo calculator was introduced.
+- Web input bounds are 0–2,000 wishes, 0–10 target copies, character pity 0–89,
+  weapon pity 0–79, CR C0–C3, and Fate 0/1. These interactive limits do not
+  change the underlying engines.
+- Added optional web and web-test dependencies and setup/testing instructions.
+  Package version is 1.0.0; the CLI version banner is updated.
+- Existing engine mathematics and probability assumptions are unchanged:
+  character pity37/240 wishes/target2 gives 90.053302850222% with CR disabled
+  and 91.049583930138% with CR enabled; the combined CR-enabled example remains
+  45.745093306891%; fresh weapon target1/120 wishes remains 70.665350512362%.
+  No previous regression expectation was replaced.
+
+### Verification
+
+- Complete suite: **126 tests passed** (all 117 previous tests plus 9 API tests).
+- Real Chromium: **61 checks passed**, zero JavaScript page errors. Desktop
+  dark/light and Chinese large-font mobile screenshots were visually inspected.
+- Added API tests for all modes, strict validation, ranked outcome mass,
+  zero/completed goals, guarantees, and tiny sequential-reference agreement.
+- Added a reproducible Chromium smoke test covering mode changes, exact
+  thresholds, history reload/cap/off, export, language/appearance persistence,
+  mobile layout, keyboard controls, error recovery, and unavailable storage.
+- Full test and timing results are recorded in BENCHMARKS.md.
+
 ## v0.5 — 2026-10-01
 
 ### Added

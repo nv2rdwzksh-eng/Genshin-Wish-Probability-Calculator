@@ -12,6 +12,10 @@ dist/
 venv/
 env/
 
+# Local web QA screenshots / reports
+artifacts/
+node_modules/
+
 # Test / coverage caches
 .pytest_cache/
 .coverage

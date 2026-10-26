@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Plan Genshin character and weapon wishes with exact probability calculations.">
+  <title>Wish Lab · Genshin Wish Probability Calculator</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%239a91ff' d='m16 0 4 12 12 4-12 4-4 12-4-12L0 16l12-4Z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/script.js" defer></script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Wish Lab home"><span class="brand-mark" aria-hidden="true">✦</span><span>WISH<span class="brand-light">LAB</span></span><span class="version-tag" data-app-version>—</span></a>
+      <div class="engine-status"><span class="status-dot"></span><span data-i18n="exactEngine">EXACT PROBABILITY ENGINE</span></div>
+    </header>
+    <main>
+      <section class="intro">
+        <p class="eyebrow" data-i18n="eyebrow">GENSHIN IMPACT · WISH PLANNER</p>
+        <h1 data-i18n="headline">Make every wish count.</h1>
+        <p class="intro-copy" data-i18n="intro">Know your odds. Set your target. Plan your next pull with confidence.</p>
+      </section>
+
+      <nav class="mode-switch" aria-label="Calculation mode" data-i18n-aria="modeLabel">
+        <div class="mode-tabs">
+        <span class="mode-indicator" aria-hidden="true"></span>
+        <button class="mode-button active" type="button" data-mode="character" aria-pressed="true"><span aria-hidden="true">✧</span><span data-i18n="characterMode">Character</span></button>
+        <button class="mode-button" type="button" data-mode="weapon" aria-pressed="false"><span aria-hidden="true">⚔</span><span data-i18n="weaponMode">Weapon</span></button>
+        <button class="mode-button" type="button" data-mode="combined" aria-pressed="false"><span aria-hidden="true">✧ → ⚔</span><span data-i18n="combinedMode">Character + Weapon</span></button>
+        </div>
+        <p class="mode-caption" id="mode-caption"></p>
+      </nav>
+
+      <div class="workspace">
+        <section class="panel planner-panel" aria-labelledby="plan-title">
+          <div class="section-heading"><span class="section-index">01 /</span><h2 id="plan-title" data-i18n="yourPlan">Your wish plan</h2><span class="tiny-badge" data-i18n="stopAtTarget">STOP AT TARGET</span></div>
+          <form id="wish_form">
+            <label class="budget-label" for="wish_budget" data-i18n="budget">Available wishes</label>
+            <div class="budget-input"><span aria-hidden="true">✦</span><input id="wish_budget" name="wish_budget" type="number" min="0" max="2000" step="1" value="240" required><span class="input-unit" data-i18n="wishes">wishes</span></div>
+            <p class="field-hint" data-i18n="budgetHint">One shared budget. Every unused wish stays yours.</p>
+
+            <fieldset id="character-fields">
+              <legend><span class="phase-dot"></span><span data-i18n="characterState">Character banner</span><span class="phase-number" id="character-phase"></span></legend>
+              <div class="field-grid">
+                <div class="field"><label for="pity" data-i18n="currentPity">Current pity</label><input id="pity" name="pity" type="number" min="0" max="89" step="1" value="37" required><small data-i18n="characterPityHint">0–89 since your last 5-star</small></div>
+                <div class="field"><label for="target_copies" data-i18n="targetCopies">Target copies</label><input id="target_copies" name="target_copies" type="number" min="0" max="10" step="1" value="2" required><small data-i18n="targetHint">Additional featured copies</small></div>
+              </div>
+              <label class="check-row" for="is_guaranteed"><span><strong data-i18n="featuredGuaranteed">Guaranteed featured 5-star</strong><small data-i18n="featuredHint">Your last non-guaranteed 5-star was a loss</small></span><input id="is_guaranteed" name="is_guaranteed" type="checkbox"></label>
+              <details class="advanced"><summary data-i18n="advancedCR">Capturing Radiance counter</summary><div class="field"><label for="cr_counter" data-i18n="crCounter">Assumed hidden counter</label><select id="cr_counter" name="cr_counter"><option value="0">C0</option><option value="1" selected>C1</option><option value="2">C2</option><option value="3">C3</option></select><small data-i18n="crHint">Community assumption. Starts at C1; leave unchanged if unknown.</small></div></details>
+            </fieldset>
+
+            <fieldset id="weapon-fields" hidden disabled>
+              <legend><span class="phase-dot weapon-dot"></span><span data-i18n="weaponState">Weapon banner</span><span class="phase-number" id="weapon-phase"></span></legend>
+              <div class="field-grid">
+                <div class="field"><label for="weapon_pity" data-i18n="currentPity">Current pity</label><input id="weapon_pity" name="weapon_pity" type="number" min="0" max="79" step="1" value="0" required><small data-i18n="weaponPityHint">0–79 since your last 5-star</small></div>
+                <div class="field"><label for="weapon_target" data-i18n="targetCopies">Target copies</label><input id="weapon_target" name="weapon_target" type="number" min="0" max="10" step="1" value="1" required><small data-i18n="weaponTargetHint">Copies of your charted weapon</small></div>
+              </div>
+              <label class="check-row" for="weapon_guaranteed"><span><strong data-i18n="promotedGuaranteed">Guaranteed promoted 5-star</strong><small data-i18n="promotedHint">A promoted weapon, not necessarily your target</small></span><input id="weapon_guaranteed" name="weapon_guaranteed" type="checkbox"></label>
+              <div class="field fate-field"><label for="fate_point" data-i18n="fatePoint">Epitomized Path · Fate Point</label><select id="fate_point" name="fate_point"><option value="0">0</option><option value="1">1</option></select><small data-i18n="fateHint">Chart your desired weapon first. Fate Points reset between banners.</small></div>
+            </fieldset>
+
+            <div class="model-note"><span aria-hidden="true">◈</span><p id="model-note"></p></div>
+            <button id="calculate" class="primary-button" type="submit"><span id="calculate-label" data-i18n="calculate">Calculate probability</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+            <div id="request-controls" class="request-controls" hidden><span class="loading-spinner" aria-hidden="true"></span><span data-i18n="calculating">Calculating your plan…</span><button type="button" class="text-button" data-cancel-calculation data-i18n="cancelCalculation">Cancel</button></div>
+            <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+          </form>
+          <section class="history-section" aria-labelledby="history-title">
+            <div class="history-heading"><h3 id="history-title" data-i18n="recentCalculations">Recent calculations</h3><button type="button" id="clear-history" class="text-button" data-i18n="clear">Clear</button></div>
+            <div id="history-list"></div>
+          </section>
+        </section>
+
+        <div class="results-column" hidden>
+          <section class="panel result-panel" aria-labelledby="result-title" aria-busy="false">
+            <div class="section-heading"><span class="section-index">02 /</span><h2 id="result-title" tabindex="-1" data-i18n="yourOdds">Your odds</h2><span class="result-status" id="result-state"></span></div>
+            <div id="result-feedback" class="result-feedback" role="status" aria-live="polite" hidden>
+              <span class="loading-spinner" id="result-spinner" aria-hidden="true"></span>
+              <p id="result-feedback-message"></p>
+              <div class="feedback-actions"><button type="button" class="secondary-button" data-cancel-calculation data-i18n="cancelCalculation">Cancel</button><button type="button" class="secondary-button" id="retry-calculation" data-i18n="retryCalculation" hidden>Retry calculation</button></div>
+            </div>
+            <div id="loading-placeholder" class="loading-placeholder" aria-hidden="true" hidden><span></span><span></span><span></span></div>
+            <p id="previous-result-note" class="previous-result-note" hidden data-i18n="previousResult">Last successful result — not a result of this attempt.</p>
+            <div id="result-content" hidden>
+              <p id="result-target" class="result-target"></p>
+              <div class="probability-display"><div><span class="probability-value" id="probability">—</span><p data-i18n="successWithinBudget">chance of reaching your target within budget</p></div><div class="probability-orbit" id="probability-orbit" aria-hidden="true"><span>✦</span></div></div>
+              <div id="result-breakdown" class="breakdown"></div>
+              <div class="metrics"><div><span data-i18n="expectedCompletion">Average wishes to target</span><strong id="expected-wishes">—</strong><small data-i18n="unconditional">E[T] · without a budget limit</small></div><div><span data-i18n="conditionalCompletion">Average when successful</span><strong id="conditional-wishes">—</strong><small data-i18n="conditional">E[T | success within budget]</small></div></div>
+              <p id="stale-notice" class="stale-notice" hidden data-i18n="stale">Inputs changed. Calculate again to update these results.</p>
+            </div>
+          </section>
+
+          <section class="panel outcomes-panel" id="outcomes-panel" hidden aria-labelledby="outcomes-title">
+            <div class="section-heading"><span class="section-index">03 /</span><h2 id="outcomes-title" data-i18n="likelyOutcomes">Most likely outcomes</h2><span id="outcome-count" class="tiny-badge"></span></div>
+            <p class="section-copy" data-i18n="outcomesHint">Copies at the end of your plan. Pulling stops at each target.</p>
+            <ol id="outcomes-list" class="outcomes-list"></ol>
+            <p class="outcomes-footnote" data-i18n="targetAlwaysShown">Your requested outcome is always shown, even outside the top list. Ties share a rank.</p>
+          </section>
+
+          <section class="panel confidence-panel" id="confidence-panel" hidden aria-labelledby="confidence-title">
+            <div class="section-heading"><span class="section-index">04 /</span><h2 id="confidence-title" data-i18n="planConfidence">Plan for your confidence</h2></div>
+            <div class="confidence-readout"><div><span id="confidence-percent">90%</span><p data-i18n="confidenceTarget">target success probability</p></div><div class="required-wishes"><strong id="threshold-wishes">—</strong><span data-i18n="minimumTotal">minimum total wishes</span></div></div>
+            <label class="sr-only" for="confidence-slider" data-i18n="confidenceSlider">Desired probability from 0% to 100%</label>
+            <div class="confidence-axis">
+              <div class="confidence-rail" aria-hidden="true"><div class="confidence-fill"></div><span class="confidence-thumb"></span></div>
+              <input id="confidence-slider" class="confidence-slider" type="range" min="0" max="100" value="90" step="1" list="confidence-ticks">
+            </div>
+            <datalist id="confidence-ticks"><option value="0"></option><option value="50"></option><option value="75"></option><option value="90"></option><option value="95"></option><option value="99"></option><option value="100"></option></datalist>
+            <div class="axis-labels" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div>
+            <div class="confidence-presets" aria-label="Confidence presets" data-i18n-aria="confidencePresets"><button type="button" data-confidence="50">50%</button><button type="button" data-confidence="75">75%</button><button type="button" data-confidence="90" class="active">90%</button><button type="button" data-confidence="95">95%</button><button type="button" data-confidence="99">99%</button></div>
+            <p class="section-copy" id="confidence-explanation"></p>
+          </section>
+        </div>
+      </div>
+      <footer><span>✦ WISH LAB</span><p data-i18n="footer">A clearer view of chance. Built for Travelers.</p><span id="version-footer">—</span></footer>
+    </main>
+  </div>
+
+  <button class="settings-launcher" id="open-settings" type="button" aria-label="Open settings" data-i18n-aria="openSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3Z"/><circle cx="12" cy="12" r="3"/></svg><span data-i18n="settings">Settings</span></button>
+  <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-window-title">
+    <div class="settings-shell">
+      <aside class="settings-sidebar">
+        <h2 id="settings-window-title" data-i18n="settings">Settings</h2>
+        <nav class="settings-nav" role="tablist" aria-orientation="vertical" aria-label="Settings categories" data-i18n-aria="settingsCategories">
+          <button type="button" id="tab-calculator" class="settings-tab active" role="tab" aria-selected="true" aria-controls="settings-calculator" data-settings-page="calculator"><span aria-hidden="true">⊞</span><span data-i18n="calculatorSettings">Calculator settings</span></button>
+          <button type="button" id="tab-appearance" class="settings-tab" role="tab" aria-selected="false" aria-controls="settings-appearance" tabindex="-1" data-settings-page="appearance"><span aria-hidden="true">◐</span><span data-i18n="appearance">Appearance</span></button>
+          <button type="button" id="tab-language" class="settings-tab" role="tab" aria-selected="false" aria-controls="settings-language" tabindex="-1" data-settings-page="language"><span aria-hidden="true">文</span><span data-i18n="languagePreferences">Language preferences</span></button>
+          <button type="button" id="tab-help" class="settings-tab" role="tab" aria-selected="false" aria-controls="settings-help" tabindex="-1" data-settings-page="help"><span aria-hidden="true">?</span><span data-i18n="helpCenter">Help center</span></button>
+        </nav>
+        <div class="settings-brand"><span class="brand-mark" aria-hidden="true">✦</span><span>Wish Lab<small data-i18n="settingsBrandCaption">A clearer view of chance.</small></span></div>
+      </aside>
+      <div class="settings-main">
+        <div class="settings-header"><div><p class="eyebrow" data-i18n="makeItYours">MAKE IT YOURS</p><h2 id="settings-title" data-i18n="calculatorSettings">Calculator settings</h2></div><button class="icon-button" id="close-settings" type="button" aria-label="Close settings" data-i18n-aria="closeSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+        <div class="settings-body">
+      <section id="settings-calculator" role="tabpanel" aria-labelledby="tab-calculator" tabindex="0">
+        <label class="setting-row"><span><strong data-i18n="historySetting">Calculation history</strong><small data-i18n="historyHint">Store the latest 5 calculations on this device.</small></span><input id="setting-history" type="checkbox" role="switch" checked></label>
+        <p class="setting-note" data-i18n="historyOffHint">Turning history off removes saved records from this browser.</p>
+        <button id="download-history" type="button" class="secondary-button" data-i18n="downloadHistory">Download calculation data (.txt)</button>
+        <label class="setting-row" for="setting-precision"><span><strong data-i18n="precision">Decimal places</strong><small data-i18n="precisionHint">Display only. Exact calculations keep full precision.</small></span><input id="setting-precision" type="number" min="0" max="10" value="2"></label>
+        <label class="setting-row" for="setting-outcomes"><span><strong data-i18n="outcomesSetting">Outcomes list</strong><small data-i18n="outcomesSettingHint">Top N outcomes (1–10), plus your target.</small></span><input id="setting-outcomes" type="number" min="1" max="10" value="3"></label>
+      </section>
+      <section id="settings-appearance" role="tabpanel" aria-labelledby="tab-appearance" tabindex="0" hidden>
+        <label class="setting-row" for="setting-theme"><span data-i18n="colorTheme">Color theme</span><select id="setting-theme"><option value="system" data-i18n="systemTheme">Follow system</option><option value="dark" data-i18n="darkTheme">Dark</option><option value="light" data-i18n="lightTheme">Light</option></select></label>
+        <label class="setting-row" for="setting-font"><span data-i18n="fontSize">Font size</span><select id="setting-font"><option value="10">10 px</option><option value="11">11 px</option><option value="12">12 px</option><option value="13">13 px</option><option value="14" selected>14 px</option><option value="15">15 px</option><option value="16">16 px</option><option value="17">17 px</option><option value="18">18 px</option><option value="19">19 px</option><option value="20">20 px</option></select></label>
+        <label class="setting-row"><span><strong data-i18n="animations">CSS animations</strong><small data-i18n="animationsHint">Your system’s reduced-motion preference is respected.</small></span><input id="setting-animations" type="checkbox" role="switch" checked></label>
+      </section>
+      <section id="settings-language" role="tabpanel" aria-labelledby="tab-language" tabindex="0" hidden><label class="setting-row" for="setting-language"><span data-i18n="language">Language</span><select id="setting-language"><option value="en">English</option><option value="zh">简体中文</option></select></label></section>
+      <section id="settings-help" class="help-center" role="tabpanel" aria-labelledby="tab-help" tabindex="0" hidden>
+        <details><summary class="about-heading"><span data-i18n="about">About the calculator</span><span id="app-version" class="about-version" data-app-version>—</span></summary><p data-i18n="aboutText">We track every possible pity, guarantee, and counter state using exact dynamic programming. Combined mode uses completion-time distributions to plan characters first, then weapons. Community soft pity and the community Capturing Radiance counter are assumed, not official per-wish formulas. Results depend on those assumptions.</p></details>
+        <details><summary data-i18n="terms">Terms and policies</summary><p data-i18n="termsText">This independent fan-made tool is for learning and planning. It is not affiliated with HoYoverse and does not guarantee in-game results. No account, purchase, or wish-history upload is required. Form inputs are sent only to the calculator backend. Settings and up to five calculations stay in your browser; this app does not save calculation history on the server or use analytics. Local server request logs may record request metadata. You can clear history at any time. Exported files are under your control.</p></details>
+        <a class="help-link" href="https://github.com/nv2rdwzksh-eng/Genshin-Wish-Probability-Calculator/issues" target="_blank" rel="noopener noreferrer"><span data-i18n="contact">Contact author / report an issue</span><span aria-hidden="true">↗</span></a>
+      </section>
+      <p id="settings-status" class="setting-note" role="status"></p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>
