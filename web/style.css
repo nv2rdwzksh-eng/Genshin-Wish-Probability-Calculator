@@ -17,6 +17,19 @@
   --shadow: 0 18px 60px #63739513;
   --glass: #f8faffdc; --sidebar-glass: #e7ecf6c9; --surface-glow: #7160c510;
 }
+/* CSS-only fallback when startup JavaScript is unavailable or disabled. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #ecf0f6; --panel: #ffffff; --panel-end: #f7f9fc; --input: #f8fafc;
+    --text: #202a43; --muted: #556580; --faint: #62728e; --border: #d3dbe8;
+    --input-border: #92a0b8; --accent: #6351c6; --accent-strong: #6c57dc;
+    --cyan: #187e72; --track: #dce1ef; --soft: #eceaf9; --danger: #b32742;
+    --shadow: 0 18px 60px #63739513;
+    --glass: #f8faffdc; --sidebar-glass: #e7ecf6c9; --surface-glow: #7160c510;
+  }
+  :root:not([data-theme]) body { background: linear-gradient(140deg, #ffffff 0%, #edf0f5 45%, #dce2ed 100%); }
+}
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { background: var(--bg); font-size: var(--size); }
@@ -80,8 +93,9 @@ input[type="number"], select { background: linear-gradient(130deg, var(--surface
 .budget-input input { border: 0; padding: 0; font-size: 1.9rem; border-radius: 0; background: transparent; }
 select option { background: var(--panel); color: var(--text); }
 input[type="number"]:hover, select:hover { border-color: var(--accent); }
-input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px #9c8cfa24; outline: none; }
-.budget-input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px #9c8cfa24; }
+/* Border feedback for pointers; the shared :focus-visible ring stays intact. */
+input:focus, select:focus { border-color: var(--accent); }
+.budget-input:focus-within { border-color: var(--accent); }
 .budget-input input:focus { box-shadow: none; }
 .field small, .check-row small, .setting-row small { display: block; font-size: .63rem; color: var(--faint); line-height: 1.55; margin-top: 6px; }
 .check-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin: 19px 0 0; cursor: pointer; }
@@ -111,7 +125,7 @@ summary { padding: 7px 0; }
 .result-feedback[data-state="error"], .result-feedback[data-state="timeout"] { border-color: var(--danger); }
 .feedback-actions { grid-column: 1 / -1; display: flex; gap: 10px; }
 .feedback-actions .secondary-button { margin: 0; width: auto; min-width: 110px; padding-inline: 18px; color: var(--text); }
-.previous-result-note { color: var(--muted); border-left: 3px solid var(--accent); padding: 10px 12px; margin: 17px 0; font-size: .9rem; background: var(--input); }
+.previous-result-note { color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; margin: 17px 0; font-size: .9rem; background: var(--input); }
 .loading-placeholder { display: grid; gap: 15px; padding: 30px 0 12px; }
 .loading-placeholder span { display: block; height: 17px; border-radius: 7px; background: linear-gradient(100deg, var(--track), var(--soft), var(--track)); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
 .loading-placeholder span:first-child { height: 65px; width: 60%; }
@@ -144,7 +158,6 @@ h3 { font-size: .75rem; font-weight: 500; }
 .probability-display { display: flex; align-items: center; gap: 10px; justify-content: space-between; padding: 3px 0 20px; }
 .probability-value { font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 550; letter-spacing: -.055em; line-height: 1.15; color: var(--accent); overflow-wrap: anywhere; }
 :root[data-long-numbers="true"] .probability-value { font-size: clamp(1.35rem, 2.6vw, 2.1rem); }
-:root[data-long-numbers="true"] .metrics strong { font-size: .95rem; overflow-wrap: anywhere; }
 .probability-display p { font-size: .67rem; color: var(--muted); max-width: 240px; margin-top: 8px; }
 .probability-orbit { --progress: 0%; flex: 0 0 76px; width: 76px; height: 76px; background: conic-gradient(var(--accent) var(--progress), var(--track) 0); border-radius: 100%; padding: 3px; }
 .probability-orbit span { height: 100%; width: 100%; background: var(--panel); display: grid; place-items: center; border-radius: 100%; font-size: 1.8rem; color: var(--accent); }
@@ -179,7 +192,9 @@ h3 { font-size: .75rem; font-weight: 500; }
 .confidence-fill { height: 100%; width: var(--confidence-position); border-radius: inherit; background: linear-gradient(90deg, var(--accent-strong), var(--accent)); transition: width .38s cubic-bezier(.22, 1, .36, 1); }
 .confidence-thumb { position: absolute; left: var(--confidence-position); top: 50%; width: 18px; height: 18px; border: 3px solid var(--panel); background: var(--accent); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 1px var(--accent), 0 0 18px #9d90f644; transition: left .38s cubic-bezier(.22, 1, .36, 1), box-shadow .2s; }
 .confidence-axis:hover .confidence-thumb { box-shadow: 0 0 0 4px #9d90f62b, 0 0 22px #9d90f655; }
-.confidence-axis:focus-within { outline: 2px solid var(--accent); outline-offset: 4px; }
+/* The native range is transparent: draw its one keyboard ring on the wrapper. */
+.confidence-axis:has(.confidence-slider:focus-visible) { outline: 3px solid var(--accent); outline-offset: 4px; }
+.confidence-slider:focus-visible { outline: none; }
 .confidence-slider { position: absolute; inset: 0; display: block; width: 100%; height: 36px; margin: 0; opacity: 0; cursor: pointer; }
 .axis-labels { display: flex; justify-content: space-between; color: var(--faint); font-size: .55rem; }
 .confidence-presets { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 17px 0 21px; }
@@ -292,4 +307,7 @@ footer p { font-size: .66rem; }
   .icon-button { flex-basis: 30px; width: 30px; height: 30px; }
 }
 :root[data-animations="off"] *, :root[data-animations="off"] *::before, :root[data-animations="off"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+@media (forced-colors: active) {
+  :focus-visible, .confidence-axis:has(.confidence-slider:focus-visible) { outline-color: Highlight; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }

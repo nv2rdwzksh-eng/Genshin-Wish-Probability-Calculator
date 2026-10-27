@@ -34,8 +34,8 @@ class WebApiTests(unittest.TestCase):
 
     def test_serves_page_assets_and_version_from_one_origin(self):
         self.assertIn('id="wish_form"', self.client.get("/").text)
-        self.assertEqual(self.client.get("/api/version").json()["version"], "1.0.2")
-        for path in ("/static/script.js", "/static/style.css"):
+        self.assertEqual(self.client.get("/api/version").json()["version"], "1.0.3")
+        for path in ("/static/script.js", "/static/startup.js", "/static/style.css"):
             self.assertEqual(self.client.get(path).status_code, 200)
 
     def test_backend_version_is_dynamic_and_html_has_no_release_literals(self):

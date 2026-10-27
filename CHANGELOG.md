@@ -1,5 +1,45 @@
 # Changelog
 
+## v1.0.3 — 2026-10-27
+
+### Consistent number formatting
+
+- Centralized quantity formatting: grouped integers for wishes/copies and one
+  decimal place for averages, independent of probability precision.
+- Applied the shared formatters to result summaries, all banner outcome labels,
+  history, thresholds, slider accessible text, budget differences, and readable
+  exports. Raw JSON exports preserve unrounded values.
+- Retained configurable probability precision and near-zero/near-one guards.
+  Confidence preset labels remain whole percentages.
+- Clarified the precision setting as probability decimal places.
+
+### First paint and focus
+
+- Added an early startup script before CSS/body rendering. Shared settings
+  validation resolves saved/system theme, font size, and animation settings
+  before the first frame. Shared translations localize parsed text and accessible
+  labels before paint, without waiting for the deferred calculator script.
+- Startup never hides the page; static English content survives disabled or
+  failed JavaScript, and CSS follows system-light without a startup script.
+- Removed input/select outline suppression and faint competing focus glows.
+  All keyboard controls use a visible 3 px opaque accent ring. The transparent
+  range uses one visible wrapper ring; forced colors use the system highlight.
+- Replaced the previous-result notice's accent stripe with a subtle full border.
+- Updated backend, package, and CLI release metadata to 1.0.3. The backend still
+  provides the only displayed UI version value.
+
+### Verification
+
+- Added browser coverage for formatting at precisions 0/2/10 in both languages,
+  readable/lossless exports, cold loads with the main script held, reloads,
+  failed/disabled JavaScript, malformed/blocked storage, and focus styles and
+  contrast in both themes.
+- Complete suite: 127 Python tests pass. Browser suites: 88 existing smoke + 52
+  existing reliability + 192 new consistency checks pass (332 total), with no
+  unexpected JavaScript errors. JavaScript syntax and Git whitespace checks pass.
+- Existing character, weapon, combined, and web probability regressions remain
+  unchanged; no probability-engine files or expected probabilities changed.
+
 ## v1.0.2 — 2026-10-26
 
 ### Result visibility

@@ -6,6 +6,8 @@
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="Plan Genshin character and weapon wishes with exact probability calculations.">
   <title>Wish Lab · Genshin Wish Probability Calculator</title>
+  <!-- Apply saved preferences before CSS and any body content can paint. -->
+  <script src="/static/startup.js"></script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%239a91ff' d='m16 0 4 12 12 4-12 4-4 12-4-12L0 16l12-4Z'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/static/style.css">
   <script src="/static/script.js" defer></script>
@@ -31,7 +33,7 @@
         <button class="mode-button" type="button" data-mode="weapon" aria-pressed="false"><span aria-hidden="true">⚔</span><span data-i18n="weaponMode">Weapon</span></button>
         <button class="mode-button" type="button" data-mode="combined" aria-pressed="false"><span aria-hidden="true">✧ → ⚔</span><span data-i18n="combinedMode">Character + Weapon</span></button>
         </div>
-        <p class="mode-caption" id="mode-caption"></p>
+        <p class="mode-caption" id="mode-caption" data-i18n="characterCaption">Featured characters, with Capturing Radiance taken into account.</p>
       </nav>
 
       <div class="workspace">
@@ -62,7 +64,8 @@
               <div class="field fate-field"><label for="fate_point" data-i18n="fatePoint">Epitomized Path · Fate Point</label><select id="fate_point" name="fate_point"><option value="0">0</option><option value="1">1</option></select><small data-i18n="fateHint">Chart your desired weapon first. Fate Points reset between banners.</small></div>
             </fieldset>
 
-            <div class="model-note"><span aria-hidden="true">◈</span><p id="model-note"></p></div>
+            <div class="model-note"><span aria-hidden="true">◈</span><p id="model-note" data-i18n="characterModel">Community soft pity + community Capturing Radiance. These are modeling assumptions, not official per-wish formulas.</p></div>
+            <noscript><p class="form-status">JavaScript is needed for interactive calculations. You can also use the Python command-line planner.</p></noscript>
             <button id="calculate" class="primary-button" type="submit"><span id="calculate-label" data-i18n="calculate">Calculate probability</span><span class="button-arrow" aria-hidden="true">↗</span></button>
             <div id="request-controls" class="request-controls" hidden><span class="loading-spinner" aria-hidden="true"></span><span data-i18n="calculating">Calculating your plan…</span><button type="button" class="text-button" data-cancel-calculation data-i18n="cancelCalculation">Cancel</button></div>
             <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
@@ -138,7 +141,7 @@
         <label class="setting-row"><span><strong data-i18n="historySetting">Calculation history</strong><small data-i18n="historyHint">Store the latest 5 calculations on this device.</small></span><input id="setting-history" type="checkbox" role="switch" checked></label>
         <p class="setting-note" data-i18n="historyOffHint">Turning history off removes saved records from this browser.</p>
         <button id="download-history" type="button" class="secondary-button" data-i18n="downloadHistory">Download calculation data (.txt)</button>
-        <label class="setting-row" for="setting-precision"><span><strong data-i18n="precision">Decimal places</strong><small data-i18n="precisionHint">Display only. Exact calculations keep full precision.</small></span><input id="setting-precision" type="number" min="0" max="10" value="2"></label>
+        <label class="setting-row" for="setting-precision"><span><strong data-i18n="precision">Probability decimal places</strong><small data-i18n="precisionHint">Probabilities only. Averages use one decimal; counts use whole numbers. Calculations keep full precision.</small></span><input id="setting-precision" type="number" min="0" max="10" value="2"></label>
         <label class="setting-row" for="setting-outcomes"><span><strong data-i18n="outcomesSetting">Outcomes list</strong><small data-i18n="outcomesSettingHint">Top N outcomes (1–10), plus your target.</small></span><input id="setting-outcomes" type="number" min="1" max="10" value="3"></label>
       </section>
       <section id="settings-appearance" role="tabpanel" aria-labelledby="tab-appearance" tabindex="0" hidden>

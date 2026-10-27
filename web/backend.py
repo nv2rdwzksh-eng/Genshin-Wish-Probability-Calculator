@@ -21,7 +21,7 @@ from genshin_wish import (
 )
 from genshin_wish.weapon_engine import iter_weapon_target_success_probabilities
 
-VERSION = "1.0.2"
+VERSION = "1.0.3"
 WEB_ROOT = Path(__file__).resolve().parent
 
 

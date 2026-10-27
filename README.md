@@ -1,4 +1,34 @@
-# Genshin Wish Probability Calculator — v1.0.2
+# Genshin Wish Probability Calculator — v1.0.3
+
+Version 1.0.3 makes number formatting consistent and fixes first-paint flashes
+and keyboard focus visibility. Probability models and engine results are unchanged.
+
+- **Wishes and copies:** grouped whole numbers (`1,200`), including summaries,
+  history, confidence thresholds, slider accessibility text, budget differences,
+  and readable text exports. Native number inputs keep editable numeric values.
+- **Averages:** E[T] and E[T | success] always show exactly one decimal place
+  (`162.0`, `1,234.5`), independently of the precision setting. Undefined averages
+  remain `—`.
+- **Calculated probabilities:** the precision setting still controls decimal
+  places, with the existing `<0.01%` / `>99.99%` guards at precision 2.
+  Confidence preset controls retain their whole-percent labels. Exported raw
+  JSON retains original numeric values for analysis.
+
+A small parser-blocking `web/startup.js` applies validated saved appearance
+settings before the stylesheet/body paint. It owns the shared English/Chinese
+translations and settings validation. A temporary parser observer translates
+incoming labels before rendering, even if the deferred calculator script is
+slow or fails; it disconnects at DOMContentLoaded. Theme, font size, animations,
+and language use the existing `wishlab.settings.v1` storage schema, including
+legacy font migration. Invalid or blocked storage uses defaults. No content is
+hidden during startup: if JavaScript is disabled or fails to load, the static
+English page remains readable, with a CSS system-light fallback. Interactive
+calculations require JavaScript (or the Python CLI).
+
+Keyboard controls now share an opaque 3 px accent outline in both themes.
+Inputs no longer suppress that outline or add a competing faint glow. The
+transparent confidence range draws its single keyboard outline around the
+visible axis. Forced-color mode uses the system highlight color.
 
 Version 1.0.2 fixes result visibility, request feedback, and version drift.
 After a successful calculation or a history selection, the app waits for the
@@ -203,6 +233,21 @@ node tests/web_reliability.cjs
 
 Its screenshots are saved under ignored `artifacts/web-v102/`. It uses the same
 Playwright environment overrides as the smoke test.
+
+The v1.0.3 browser check covers integer/average/probability formatting, exports,
+first contentful paint with the deferred script held back and cache disabled,
+saved/system appearance, both languages, reloads, disabled/failed JavaScript,
+malformed/blocked storage, and keyboard focus/contrast in both themes:
+
+```powershell
+node tests/web_consistency.cjs
+```
+
+It uses the same environment overrides and saves screenshots in ignored
+`artifacts/web-v103/`. These rendering checks use headless Chromium; they do not
+claim a physical-device or cross-browser accessibility audit.
+v1.0.3 verification: **127 Python tests** and **332 browser checks** passed
+(88 smoke, 52 reliability, 192 consistency), with no unexpected browser errors.
 
 v0.5 adds exact sequential **character target -> weapon target** planning.
 The two existing target-aware engines provide first-completion distributions;
